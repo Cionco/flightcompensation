@@ -40,6 +40,8 @@ public final class Parser {
 			f.scheduled_arrival		= ISO8601ToTimestamp(arrival.getString("actual"));
 			
 			f.flight_number = json_flight.getJSONObject("flight").getString("iata");
+			
+			System.out.println("Parsed object");
 		}
 		
 		return result;

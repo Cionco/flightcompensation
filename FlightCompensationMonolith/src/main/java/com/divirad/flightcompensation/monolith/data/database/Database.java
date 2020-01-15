@@ -8,10 +8,10 @@ import java.sql.SQLException;
 
 public class Database {
 	
-	private final static String HOSTNAME = "db4free.net";
-	private final static String DATABASE = "flightcompmono";
-	private final static String USERNAME = "nicolaskepper";
-	private final static String PASSWORD = "flightcomptestdb";
+	private final static String HOSTNAME = "remotemysql.com";
+	private final static String DATABASE = "ttEVjJHKRv";
+	private final static String USERNAME = "ttEVjJHKRv";
+	private final static String PASSWORD = "m6EYacRlzZ";
 
     public interface ISetParams {
         void run(PreparedStatement ps) throws SQLException;
