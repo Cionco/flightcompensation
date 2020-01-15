@@ -12,6 +12,7 @@ public class Database {
 	private final static String DATABASE = "ttEVjJHKRv";
 	private final static String USERNAME = "ttEVjJHKRv";
 	private final static String PASSWORD = "m6EYacRlzZ";
+	private final static String PARAMS	 = "serverTimezone=Europe/Berlin";
 	
     public interface ISetParams {
         void run(PreparedStatement ps) throws SQLException;
@@ -40,7 +41,7 @@ public class Database {
      * @return the return value of useResultSet
      */
     public static <T> T query(String sql, ISetParams setParams, IUseResultSet<T> useResultSet) {
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://" + HOSTNAME + "/" + DATABASE, USERNAME, PASSWORD)) {
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://" + HOSTNAME + "/" + DATABASE + "?" + PARAMS, USERNAME, PASSWORD)) {
             try (PreparedStatement ps = con.prepareStatement(sql)) {
                 setParams.run(ps);
                 try (ResultSet rs = ps.executeQuery()) {
@@ -67,7 +68,7 @@ public class Database {
      * @param setParams function to set the parameters of the PreparedStatement
      */
     public static void execute(String sql, ISetParams setParams) {
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://" + HOSTNAME + "/" + DATABASE, USERNAME, PASSWORD)) {
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://" + HOSTNAME + "/" + DATABASE + "?" + PARAMS, USERNAME, PASSWORD)) {
         		try (PreparedStatement ps = con.prepareStatement(sql)) {
                 setParams.run(ps);
                 ps.execute();
