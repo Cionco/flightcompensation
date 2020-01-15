@@ -44,7 +44,7 @@ public final class Parser {
 				f.scheduled_arrival		= ISO8601ToTimestamp(arrival.getString("scheduled"));
 				//System.out.println(arrival.get("actual").getClass().getName());
 				f.actual_arrival		= arrival.get("actual") instanceof String ? ISO8601ToTimestamp(arrival.getString("actual")) : null;
-				f.arrival_delay = arrival.get("delay") instanceof Integer ? arrival.getInt("delay") : 0;
+				f.arrival_delay = arrival.get("delay") instanceof Integer ? arrival.getInt("delay") : null;
 				
 				
 				System.out.println("Parsed object: " + f);
