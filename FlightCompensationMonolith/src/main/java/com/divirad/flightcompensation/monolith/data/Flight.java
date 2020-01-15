@@ -20,6 +20,9 @@ public final class Flight {
 	public Timestamp scheduled_arrival;
 	public Timestamp actual_department;
 	
+	public int departure_delay;
+	public int arrival_delay;
+	
 	public String origin_airport;
 	public String destination_airport;
 	
