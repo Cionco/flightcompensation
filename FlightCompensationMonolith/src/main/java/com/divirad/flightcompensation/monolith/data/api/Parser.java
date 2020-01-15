@@ -31,6 +31,7 @@ public final class Parser {
 				Flight f = new Flight();
 				f.flight_date = Date.valueOf(json_flight.getString("flight_date"));
 				f.flight_status = FlightStatusDao.instance.getIdByName(json_flight.getString("flight_status"));
+				f.flight_number = json_flight.getJSONObject("flight").getString("iata");
 				
 				JSONObject departure = json_flight.getJSONObject("departure");
 				JSONObject arrival = json_flight.getJSONObject("arrival");
@@ -38,12 +39,13 @@ public final class Parser {
 				f.scheduled_departure	= ISO8601ToTimestamp(departure.getString("scheduled"));
 				//if(!(departure.get("actual") instanceof String)) System.out.println("OH BOY " + json_flight.getJSONObject("flight").getString("iata"));
 				f.actual_departure		= departure.get("actual") instanceof String ? ISO8601ToTimestamp(departure.getString("actual")) : null;
+				f.departure_delay = departure.get("delay") instanceof Integer ? departure.getInt("delay") : 0;
 				f.destination_airport = arrival.getString("iata");
 				f.scheduled_arrival		= ISO8601ToTimestamp(arrival.getString("scheduled"));
 				//System.out.println(arrival.get("actual").getClass().getName());
-				f.scheduled_arrival		= arrival.get("actual") instanceof String ? ISO8601ToTimestamp(arrival.getString("actual")) : null;
+				f.actual_arrival		= arrival.get("actual") instanceof String ? ISO8601ToTimestamp(arrival.getString("actual")) : null;
+				f.arrival_delay = arrival.get("delay") instanceof Integer ? arrival.getInt("delay") : 0;
 				
-				f.flight_number = json_flight.getJSONObject("flight").getString("iata");
 				
 				System.out.println("Parsed object: " + f);
 				result.add(f);
