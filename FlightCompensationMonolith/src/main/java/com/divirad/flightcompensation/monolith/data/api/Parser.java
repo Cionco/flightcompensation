@@ -35,9 +35,9 @@ public final class Parser {
 				JSONObject departure = json_flight.getJSONObject("departure");
 				JSONObject arrival = json_flight.getJSONObject("arrival");
 				f.origin_airport = departure.getString("iata");
-				f.scheduled_department	= ISO8601ToTimestamp(departure.getString("scheduled"));
+				f.scheduled_departure	= ISO8601ToTimestamp(departure.getString("scheduled"));
 				//if(!(departure.get("actual") instanceof String)) System.out.println("OH BOY " + json_flight.getJSONObject("flight").getString("iata"));
-				f.actual_department		= departure.get("actual") instanceof String ? ISO8601ToTimestamp(departure.getString("actual")) : null;
+				f.actual_departure		= departure.get("actual") instanceof String ? ISO8601ToTimestamp(departure.getString("actual")) : null;
 				f.destination_airport = arrival.getString("iata");
 				f.scheduled_arrival		= ISO8601ToTimestamp(arrival.getString("scheduled"));
 				//System.out.println(arrival.get("actual").getClass().getName());

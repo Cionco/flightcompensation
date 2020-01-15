@@ -15,10 +15,10 @@ public final class Flight {
 	
 	public int flight_status;
 	
-	public Timestamp scheduled_department;
-	public Timestamp actaual_department;
+	public Timestamp scheduled_departure;
+	public Timestamp actual_departure;
 	public Timestamp scheduled_arrival;
-	public Timestamp actual_department;
+	public Timestamp actual_arrival;
 	
 	public int departure_delay;
 	public int arrival_delay;

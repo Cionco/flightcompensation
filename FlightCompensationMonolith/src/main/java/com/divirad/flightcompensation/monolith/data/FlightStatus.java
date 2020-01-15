@@ -7,8 +7,8 @@ public final class FlightStatus {
 
 	@MysqlMarker.PrimaryKey
 	@MysqlMarker.AutomaticValue
-	public int FlightStatusId;
-	public String FlightStatus;
+	public int id;
+	public String flight_status;
 	
 	public FlightStatus() {}
 }
