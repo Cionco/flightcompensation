@@ -1,8 +1,9 @@
-package com.divirad.flightcompensation.FlightCompensatioin.data;
+package com.divirad.flightcompensation.monolith.data;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
-import com.divirad.flightcompensation.FlightCompensatioin.data.database.MysqlMarker;
+import com.divirad.flightcompensation.monolith.data.database.MysqlMarker;
 
 @MysqlMarker.TableView(tableName = "Flight", isWholeTable = true)
 public final class Flight {
@@ -14,10 +15,10 @@ public final class Flight {
 	
 	public int flight_status;
 	
-	public Date scheduled_department;
-	public Date actaual_department;
-	public Date scheduled_arrival;
-	public Date actual_department;
+	public Timestamp scheduled_department;
+	public Timestamp actaual_department;
+	public Timestamp scheduled_arrival;
+	public Timestamp actual_department;
 	
 	public String origin_airport;
 	public String destination_airport;

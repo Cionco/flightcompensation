@@ -1,8 +1,8 @@
-package com.divirad.flightcompensation.FlightCompensatioin.data;
+package com.divirad.flightcompensation.monolith.data;
 
 import java.sql.Date;
 
-import com.divirad.flightcompensation.FlightCompensatioin.data.database.Dao;
+import com.divirad.flightcompensation.monolith.data.database.Dao;
 
 public class FlightDao extends Dao<Flight> {
 

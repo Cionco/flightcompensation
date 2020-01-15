@@ -1,4 +1,4 @@
-package com.divirad.flightcompensation.FlightCompensatioin.data.database;
+package com.divirad.flightcompensation.monolith.data.database;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
