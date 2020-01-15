@@ -229,9 +229,7 @@ public class Dao<T> {
      * @param data List with all the data that should be inserted. All fields of all elements will be inserted.
      */
     protected void insertAll(ArrayList<T> data) {
-    	StringJoiner values_joiner = new StringJoiner(",");
-    	for(int i = 1; i < data.size(); i++) values_joiner.add(param_list);
-    	sql_insert += values_joiner.toString();
+    	for(int i = 1; i < data.size(); i++) sql_insert += "," + param_list;
     	
     	Database.execute(sql_insert, ps -> {
     		int index = 1;

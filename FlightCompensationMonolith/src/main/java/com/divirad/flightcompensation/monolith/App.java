@@ -20,7 +20,7 @@ public class App {
 	public static void main(String[] args) {
 		ArrayList<Flight> flights = null;
 		
-		File f = new File("C:\\Users\\h4098099\\Desktop\\xamplejson.json");
+		File f = new File("/Users/nicolaskepper/Downloads/xamplejson.json");
 		try {
 			String content = new String(Files.readAllBytes(Paths.get(f.toURI())), "UTF-8");
 			JSONObject o = new JSONObject(content);

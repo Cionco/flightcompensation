@@ -21,9 +21,7 @@ public class FlightDao extends Dao<Flight> {
 	}
 	
 	public void storeFlights(ArrayList<Flight> flights) {
-		for(Flight f : flights) {
-			insert(f);
-		}
+		insertAll(flights);
 	}
 
 }
