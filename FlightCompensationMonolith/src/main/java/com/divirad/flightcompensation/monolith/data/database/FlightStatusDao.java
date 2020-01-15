@@ -1,7 +1,6 @@
-package com.divirad.flightcompensation.monolith.data;
+package com.divirad.flightcompensation.monolith.data.database;
 
-import com.divirad.flightcompensation.monolith.data.database.Database;
-import com.divirad.flightcompensation.monolith.data.database.Dao;
+import com.divirad.flightcompensation.monolith.data.FlightStatus;
 
 public class FlightStatusDao extends Dao<FlightStatus> {
 	

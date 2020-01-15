@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.divirad.flightcompensation.monolith.data.Flight;
-import com.divirad.flightcompensation.monolith.data.FlightStatusDao;
+import com.divirad.flightcompensation.monolith.data.database.FlightStatusDao;
 
 public final class Parser {
 
