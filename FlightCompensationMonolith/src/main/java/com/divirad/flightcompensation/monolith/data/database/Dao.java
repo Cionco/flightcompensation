@@ -221,6 +221,24 @@ public class Dao<T> {
     protected void insert(T data) {
         Database.execute(sql_insert, ps -> setParams(ps, data, this.notAutomatedKeys, 1));
     }
+    
+    
+    /**
+     * Inserts new rows in the mysql table. Only available if class represents whole mysql table
+     * 
+     * @param data List with all the data that should be inserted. All fields of all elements will be inserted.
+     */
+    protected void insertAll(ArrayList<T> data) {
+    	StringJoiner values_joiner = new StringJoiner(",");
+    	for(int i = 1; i < data.size(); i++) values_joiner.add(param_list);
+    	sql_insert += values_joiner.toString();
+    	
+    	Database.execute(sql_insert, ps -> {
+    		int index = 1;
+    		for(T t : data)
+    			index = setParams(ps, t, this.notAutomatedKeys, index);
+    	});
+    }
 
     /**
      * Updates a row in the mysql table.

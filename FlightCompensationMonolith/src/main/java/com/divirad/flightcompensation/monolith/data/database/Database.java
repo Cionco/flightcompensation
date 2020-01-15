@@ -67,14 +67,15 @@ public class Database {
      * @param setParams function to set the parameters of the PreparedStatement
      */
     public static void execute(String sql, ISetParams setParams) {
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://" + HOSTNAME + "/" + DATABASE, USERNAME, PASSWORD)) {
-        		try (PreparedStatement ps = con.prepareStatement(sql)) {
-                setParams.run(ps);
-                ps.execute();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try (Connection con = DriverManager.getConnection("jdbc:mysql://" + HOSTNAME + "/" + DATABASE, USERNAME, PASSWORD)) {
+//        		try (PreparedStatement ps = con.prepareStatement(sql)) {
+        		System.out.println(sql);
+//                setParams.run(ps);
+                //ps.execute();
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static int getLastID() {
