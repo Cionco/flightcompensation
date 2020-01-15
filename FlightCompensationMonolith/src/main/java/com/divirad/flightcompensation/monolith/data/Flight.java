@@ -25,4 +25,13 @@ public final class Flight {
 	
 	public Flight() {}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(flight_date);
+		sb.append(" ");
+		sb.append(flight_number);
+		return sb.toString();
+	}
 }

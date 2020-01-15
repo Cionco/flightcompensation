@@ -12,7 +12,7 @@ public class Database {
 	private final static String DATABASE = "ttEVjJHKRv";
 	private final static String USERNAME = "ttEVjJHKRv";
 	private final static String PASSWORD = "m6EYacRlzZ";
-
+	
     public interface ISetParams {
         void run(PreparedStatement ps) throws SQLException;
     }
