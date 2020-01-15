@@ -11,7 +11,7 @@ public class FlightStatusDao extends Dao<FlightStatus> {
 	}
 	
 	public int getIdByName(String name) {
-		return Database.query("SELECT id FROM " + this.tableName + " WHERE FlightStatus = ?", 
+		return Database.query("SELECT id FROM " + this.tableName + " WHERE flight_status = ?", 
 				ps -> ps.setString(1, name),
 				rs -> {
 					if(rs == null || !rs.next()) return -1;
