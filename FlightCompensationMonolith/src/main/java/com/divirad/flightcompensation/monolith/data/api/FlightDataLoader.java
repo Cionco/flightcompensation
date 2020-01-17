@@ -55,6 +55,13 @@ public class FlightDataLoader {
 		listenerList.remove(DownloadListener.class, l);
 	}
 	
+	protected void fireStartingMultiDownload() {
+		DownloadListener[] listeners = getDownloadListeners();
+		for(DownloadListener l : listeners) {
+			l.startingMultiDownload();
+		}
+	}
+	
 	protected void fireDownloaded(String url, int status_code, JSONObject result) {
 		fireDownloaded(new DownloadEvent(url, status_code, result));
 	}
@@ -63,6 +70,13 @@ public class FlightDataLoader {
 		DownloadListener[] listeners = getDownloadListeners();
 		for(DownloadListener l : listeners) {
 			l.dataDownloaded(e);
+		}
+	}
+	
+	protected void fireDoneDownloading() {
+		DownloadListener[] listeners = getDownloadListeners();
+		for(DownloadListener l : listeners) {
+			l.doneDownloading();
 		}
 	}
 	
@@ -85,6 +99,7 @@ public class FlightDataLoader {
 	
 	public void getAllApiFlightData() {
 		DownloadEvent e;
+		fireStartingMultiDownload();
 		do {
 			System.out.println("New Request");
 			StringJoiner filter = new StringJoiner("&", "?", "");
@@ -100,6 +115,8 @@ public class FlightDataLoader {
 			e.setElements(pagination.getInt("limit"));
 			e.setTotal(pagination.getInt("total"));
 			e.setOffset(pagination.getInt("offset"));
+			if(e.getOffset() + e.getElements() >= e.getTotal())
+				fireDoneDownloading();
 			fireDownloaded(e);
 		} while(e.getOffset() + e.getElements() < e.getTotal());
 		

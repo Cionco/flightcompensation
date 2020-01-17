@@ -39,6 +39,7 @@ public class App implements DownloadListener, ParseListener {
 		FlightDataLoader fdl = FlightDataLoader.getInstance(	new Constraint("flight_date", () -> LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
 															,	new Constraint("dep_iata", () -> "haj"));
 		fdl.addDownloadListener(this);
+		Parser.getInstance().addParseListener(this);
 		//JSONObject o = fdl.getApiFlightData();
 		fdl.getAllApiFlightData();
 		
@@ -65,7 +66,7 @@ public class App implements DownloadListener, ParseListener {
 	
 	@Override
 	public void dataDownloaded(DownloadEvent e) {
-		System.out.println("Recieved new Data (" + Math.max(e.getOffset() + e.getElements(), e.getTotal()) + "/" + e.getTotal() + ")");
+		System.out.println("Recieved new Data (" + Math.min(e.getOffset() + e.getElements(), e.getTotal()) + "/" + e.getTotal() + ")");
 		downloaded_objects++;
 		Parser.getInstance().parseFlights(e.getResult().getJSONArray("data"));		
 	}
@@ -80,8 +81,11 @@ public class App implements DownloadListener, ParseListener {
 	public void jsonParsed(ParseEvent e) {
 		flights.addAll(e.getResult());
 		parsed_objects++;
-		if(!downloading && parsed_objects == downloaded_objects)
+		if(!false && parsed_objects == downloaded_objects) {
+			System.out.println("Done parsing, writing to db");
 			FlightDao.instance.storeFlights(flights);
+			
+		}
 	}
 
 
