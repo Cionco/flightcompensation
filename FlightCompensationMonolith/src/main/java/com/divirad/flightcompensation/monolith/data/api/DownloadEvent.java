@@ -8,6 +8,10 @@ public class DownloadEvent {
 	private int status_code;
 	private JSONObject result;
 	
+	private int elements;
+	private int offset;
+	private int total;
+	
 	public DownloadEvent() {}
 	
 	public DownloadEvent(String url, int status_code, JSONObject result) {
@@ -16,6 +20,16 @@ public class DownloadEvent {
 		this.result = result;
 	}
 	
+	public DownloadEvent(String url, int status_code, JSONObject result, int elements, int offset, int total) {
+		super();
+		this.url = url;
+		this.status_code = status_code;
+		this.result = result;
+		this.elements = elements;
+		this.offset = offset;
+		this.total = total;
+	}
+
 	public void setUrl(String url) {
 		this.url = url;
 	}
@@ -28,6 +42,18 @@ public class DownloadEvent {
 		this.result = result;
 	}
 
+	public void setElements(int elements) {
+		this.elements = elements;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
 	public String getUrl() {
 		return url;
 	}
@@ -38,6 +64,18 @@ public class DownloadEvent {
 
 	public JSONObject getResult() {
 		return result;
+	}
+
+	public int getElements() {
+		return elements;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public int getTotal() {
+		return total;
 	}
 	
 	

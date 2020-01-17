@@ -15,6 +15,7 @@ public class FlightDataLoader {
 	
 	private static final String HOSTNAME = "https://api.aviationstack.com/v1/";
 	private static final String ACCESS_KEY = "fd5dc26aa131c9e7f60f5ce54cf459ce";
+	private static final int LIMIT = 100;
 
 	public static FlightDataLoader instance;
 	
@@ -23,6 +24,16 @@ public class FlightDataLoader {
 	public interface IDetValue {
 		public String value();
 	}
+	
+	private IDetValue offsetController = new IDetValue() {
+		int offset = 0;
+		
+		public String value() {
+			int return_value = offset;
+			offset += LIMIT;
+			return Integer.toString(return_value);
+		}
+	};
 	
 	private ArrayList<Constraint> constraints = new ArrayList<>();
 	
@@ -66,9 +77,39 @@ public class FlightDataLoader {
 			filter.add(c.key + "=" + c.value.value());
 		String url = HOSTNAME + "flights" + filter;
 
-		String output = "";
+		DownloadEvent e = doGetCall(url);
+		
+		fireDownloaded(e);
+		return e.getResult();
+	}
+	
+	public void getAllApiFlightData() {
+		DownloadEvent e;
+		do {
+			System.out.println("New Request");
+			StringJoiner filter = new StringJoiner("&", "?", "");
+			filter.add("access_key=" + ACCESS_KEY);
+			for(Constraint c : constraints)
+				filter.add(c.key + "=" + c.value.value());
+			filter.add("offset" + "=" + offsetController.value());
+			String url = HOSTNAME + "flights" + filter;
+			
+			e = doGetCall(url);
+			
+			JSONObject pagination = e.getResult().getJSONObject("pagination");
+			e.setElements(pagination.getInt("limit"));
+			e.setTotal(pagination.getInt("total"));
+			e.setOffset(pagination.getInt("offset"));
+			fireDownloaded(e);
+		} while(e.getOffset() + e.getElements() < e.getTotal());
+		
+		
+	}
+	
+	private DownloadEvent doGetCall(String url) {
 		HttpURLConnection conn = null;
 		DownloadEvent ev = new DownloadEvent();
+		String output = "";
 		ev.setUrl(url);
 		try {  
 		    URL obj = new URL(url);
@@ -88,12 +129,7 @@ public class FlightDataLoader {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		fireDownloaded(ev);
-		return ev.getResult();
-	}
-	
-	public void getAllApiFlightData() {
-		
+		return ev;
 	}
 	
 	public static class Constraint {
