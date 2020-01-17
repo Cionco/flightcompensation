@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import javax.swing.event.EventListenerList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,11 +17,34 @@ public final class Parser {
 
 	private static Parser instance;
 	
+	private EventListenerList listeners = new EventListenerList();
+	
 	private Parser() {}
 	
 	public static Parser getInstance() {
 		if(instance == null) instance = new Parser();
 		return instance;
+	}
+	
+	public void addParseListener(ParseListener l) {
+		listeners.add(ParseListener.class, l);
+	}
+	
+	public void removeParseListener(ParseListener l) {
+		listeners.remove(ParseListener.class, l);
+	}
+	
+	protected void fireJsonParsed(ArrayList<Flight> flights) {
+		ParseEvent e = new ParseEvent();
+		e.setResult(flights);
+		ParseListener[] listeners = getParseListeners();
+		for(ParseListener l : listeners) {
+			l.jsonParsed(e);
+		}
+	}
+	
+	private ParseListener[] getParseListeners() {
+		return (ParseListener[]) listeners.getListeners(ParseListener.class);
 	}
 	
 	public ArrayList<Flight> parseFlights(JSONArray json_flights) {
@@ -55,6 +80,7 @@ public final class Parser {
 			}
 		}
 		
+		fireJsonParsed(result);		
 		return result;
 	}
 	
