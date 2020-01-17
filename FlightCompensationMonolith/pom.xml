@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.divirad.flightcompensation</groupId>
-  <artifactId>FlightCompensatioin</artifactId>
+  <artifactId>FlightCompensation</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>FlightCompensatioin</name>
+  <name>FlightCompensation</name>
   <url>http://maven.apache.org</url>
 
   <properties>
