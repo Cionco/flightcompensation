@@ -62,11 +62,11 @@ public class FlightDataLoader {
 		}
 	}
 	
-	protected void fireDownloaded(String url, int status_code, JSONObject result) {
-		fireDownloaded(new DownloadEvent(url, status_code, result));
+	protected <T> void fireDownloaded(Class<T> resource, String url, int status_code, JSONObject result) {
+		fireDownloaded(new DownloadEvent<T>(resource, url, status_code, result));
 	}
 	
-	protected void fireDownloaded(DownloadEvent e) {
+	protected <T> void fireDownloaded(DownloadEvent<T> e) {
 		DownloadListener[] listeners = getDownloadListeners();
 		for(DownloadListener l : listeners) {
 			l.dataDownloaded(e);
@@ -84,21 +84,21 @@ public class FlightDataLoader {
 		return (DownloadListener[]) listenerList.getListeners(DownloadListener.class);
 	}
 	
-	public JSONObject getApiFlightData() {
+	public <T> JSONObject getApiData(Class<T> resource) {
 		StringJoiner filter = new StringJoiner("&", "?", "");
 		filter.add("access_key=" + ACCESS_KEY);
 		for(Constraint c : constraints)
 			filter.add(c.key + "=" + c.value.value());
-		String url = HOSTNAME + "flights" + filter;
+		String url = HOSTNAME + (resource.getName().toLowerCase() + "s") + filter;
 
-		DownloadEvent e = doGetCall(url);
+		DownloadEvent<T> e = doGetCall(resource, url);
 		
 		fireDownloaded(e);
 		return e.getResult();
 	}
 	
-	public void getAllApiFlightData() {
-		DownloadEvent e;
+	public <T> void getAllApiData(Class<T> resource) {
+		DownloadEvent<T> e;
 		fireStartingMultiDownload();
 		do {
 			System.out.println("New Request");
@@ -107,9 +107,9 @@ public class FlightDataLoader {
 			for(Constraint c : constraints)
 				filter.add(c.key + "=" + c.value.value());
 			filter.add("offset" + "=" + offsetController.value());
-			String url = HOSTNAME + "flights" + filter;
+			String url = HOSTNAME + (resource.getName().toLowerCase() + "s") + filter;
 			
-			e = doGetCall(url);
+			e = doGetCall(resource, url);
 			
 			JSONObject pagination = e.getResult().getJSONObject("pagination");
 			e.setElements(pagination.getInt("limit"));
@@ -123,9 +123,9 @@ public class FlightDataLoader {
 		
 	}
 	
-	private DownloadEvent doGetCall(String url) {
+	private <T> DownloadEvent<T> doGetCall(Class<T> resource, String url) {
 		HttpURLConnection conn = null;
-		DownloadEvent ev = new DownloadEvent();
+		DownloadEvent<T> ev = new DownloadEvent<>(resource);
 		String output = "";
 		ev.setUrl(url);
 		try {  

@@ -2,19 +2,25 @@ package com.divirad.flightcompensation.monolith.data.api;
 
 import java.util.ArrayList;
 
-import com.divirad.flightcompensation.monolith.data.Flight;
+public class ParseEvent<T> {
 
-public class ParseEvent {
-
-	private ArrayList<Flight> result;
+	private ArrayList<T> result;
 	
-
+	private Class<T> resource;
 	
-	public ArrayList<Flight> getResult() {
+	public ParseEvent(Class<T> resource) {
+		this.resource = resource;
+	}
+	
+	public ArrayList<T> getResult() {
 		return result;
 	}
 	
-	public void setResult(ArrayList<Flight> result) {
+	public Class<T> getResource() {
+		return resource;
+	}
+	
+	public void setResult(ArrayList<T> result) {
 		this.result = result;
 	}
 }

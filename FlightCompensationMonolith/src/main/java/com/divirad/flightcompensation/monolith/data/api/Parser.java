@@ -1,5 +1,6 @@
 package com.divirad.flightcompensation.monolith.data.api;
 
+import java.lang.reflect.Modifier;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 
 import com.divirad.flightcompensation.monolith.data.Flight;
 import com.divirad.flightcompensation.monolith.data.database.FlightStatusDao;
+import com.divirad.flightcompensation.monolith.data.database.MysqlMarker;
 
 public final class Parser {
 
@@ -34,9 +36,9 @@ public final class Parser {
 		listeners.remove(ParseListener.class, l);
 	}
 	
-	protected void fireJsonParsed(ArrayList<Flight> flights) {
-		ParseEvent e = new ParseEvent();
-		e.setResult(flights);
+	protected <T> void fireJsonParsed(Class<T> resource_type, ArrayList<T> parsed) {
+		ParseEvent<T> e = new ParseEvent<>(resource_type);
+		e.setResult(parsed);
 		ParseListener[] listeners = getParseListeners();
 		for(ParseListener l : listeners) {
 			l.jsonParsed(e);
@@ -47,7 +49,24 @@ public final class Parser {
 		return (ParseListener[]) listeners.getListeners(ParseListener.class);
 	}
 	
-	public ArrayList<Flight> parseFlights(JSONArray json_flights) {
+	@SuppressWarnings("unchecked")
+	public <T> ArrayList<T> parseData(Class<T> resource_type, JSONArray data) {
+		if (!Modifier.isFinal(resource_type.getModifiers()))
+            throw new IllegalArgumentException("Can't use class: must be final");
+        if (resource_type.getSuperclass() != Object.class)
+            throw new IllegalArgumentException("Can't use class: must not extend another class");
+        MysqlMarker.TableView annotation = resource_type.getAnnotation(MysqlMarker.TableView.class);
+        if (annotation == null)
+            throw new IllegalArgumentException("Can't use class: must have annotation MysqlMarker.TableView");
+        if(!annotation.isWholeTable())
+        	throw new IllegalArgumentException("Can't use class: must represent whole table");
+        
+        if(resource_type == Flight.class) return (ArrayList<T>) parseFlights(data);
+        //else if(resource_type == Airport.class) 
+        else return null;
+	}
+	
+	private ArrayList<Flight> parseFlights(JSONArray json_flights) {
 		ArrayList<Flight> result = new ArrayList<>();
 		
 		for(Object flight : json_flights) {
@@ -80,7 +99,7 @@ public final class Parser {
 			}
 		}
 		
-		fireJsonParsed(result);		
+		fireJsonParsed(Flight.class, result);		
 		return result;
 	}
 	

@@ -3,6 +3,7 @@ package user;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.divirad.flightcompensation.monolith.data.Flight;
 import com.divirad.flightcompensation.monolith.data.api.DownloadParseSaveController;
 import com.divirad.flightcompensation.monolith.data.api.FlightDataLoader;
 import com.divirad.flightcompensation.monolith.data.api.FlightDataLoader.Constraint;
@@ -14,13 +15,13 @@ public enum Command {
 		public void execute(String...params) {
 			DownloadParseSaveController controller = new DownloadParseSaveController();
 			Constraint[] constraints;
-			String resource;
+			Class<?> resource;
 			if(params[1].equals("flights")) {
 				constraints = new Constraint[] {
 						new Constraint("flight_date", () -> LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
 					,	new Constraint("dep_iata", () -> "haj")
 				};
-				resource = "flights";
+				resource = Flight.class;
 			} else if(params[1].equals("airports")) {
 				System.out.println(OPTION_NOT_IMPLEMENTED_ERROR);
 				return;

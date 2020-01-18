@@ -2,7 +2,9 @@ package com.divirad.flightcompensation.monolith.data.api;
 
 import org.json.JSONObject;
 
-public class DownloadEvent {
+public class DownloadEvent<T> {
+	
+	private Class<T> resource;
 
 	private String url;
 	private int status_code;
@@ -12,16 +14,20 @@ public class DownloadEvent {
 	private int offset;
 	private int total;
 	
-	public DownloadEvent() {}
+	public DownloadEvent(Class<T> resource) {
+		this.resource = resource;
+	}
 	
-	public DownloadEvent(String url, int status_code, JSONObject result) {
+	public DownloadEvent(Class<T> resource, String url, int status_code, JSONObject result) {
+		this.resource = resource;
 		this.url = url;
 		this.status_code = status_code;
 		this.result = result;
 	}
 	
-	public DownloadEvent(String url, int status_code, JSONObject result, int elements, int offset, int total) {
+	public DownloadEvent(Class<T> resource, String url, int status_code, JSONObject result, int elements, int offset, int total) {
 		super();
+		this.resource = resource;
 		this.url = url;
 		this.status_code = status_code;
 		this.result = result;
@@ -54,6 +60,10 @@ public class DownloadEvent {
 		this.total = total;
 	}
 
+	public Class<T> getResource() {
+		return resource;
+	}
+	
 	public String getUrl() {
 		return url;
 	}

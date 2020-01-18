@@ -11,7 +11,7 @@ public class DownloadParseSaveController implements DownloadListener, ParseListe
 	private int parsed_objects = 0;
 	private boolean downloading = false;
 	
-	private ArrayList<Flight> flights = new ArrayList<>();
+	private ArrayList<Object> parsed = new ArrayList<>();
 	
 	@Override
 	public void startingMultiDownload() {
@@ -21,10 +21,10 @@ public class DownloadParseSaveController implements DownloadListener, ParseListe
 	}
 	
 	@Override
-	public void dataDownloaded(DownloadEvent e) {
+	public void dataDownloaded(DownloadEvent<?> e) {
 		System.out.println("Recieved new Data (" + Math.min(e.getOffset() + e.getElements(), e.getTotal()) + "/" + e.getTotal() + ")");
 		downloaded_objects++;
-		Parser.getInstance().parseFlights(e.getResult().getJSONArray("data"));		
+		Parser.getInstance().parseData(e.getResource(), e.getResult().getJSONArray("data"));		
 	}
 
 	@Override
@@ -34,13 +34,22 @@ public class DownloadParseSaveController implements DownloadListener, ParseListe
 	}
 
 	@Override
-	public void jsonParsed(ParseEvent e) {
-		flights.addAll(e.getResult());
+	public void jsonParsed(ParseEvent<?> e) {
+		parsed.addAll(e.getResult());
 		parsed_objects++;
 		if(!downloading && parsed_objects == downloaded_objects) {
 			System.out.println("Done parsing, writing to db");
-			FlightDao.instance.storeFlights(flights);
+			if(e.getResource() == Flight.class)
+				FlightDao.instance.storeFlights(typifyArrayList(parsed));
 			
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> ArrayList<T> typifyArrayList(ArrayList<Object> objects) {
+		ArrayList<T> result = new ArrayList<>();
+		for(Object o : objects)
+			result.add((T) o);
+		return result;
 	}
 }
