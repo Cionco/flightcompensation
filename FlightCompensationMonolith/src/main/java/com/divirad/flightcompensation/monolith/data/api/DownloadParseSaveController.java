@@ -41,6 +41,7 @@ public class DownloadParseSaveController implements DownloadListener, ParseListe
 			System.out.println("Done parsing, writing to db");
 			if(e.getResource() == Flight.class)
 				FlightDao.instance.storeFlights(typifyArrayList(parsed));
+			parsed = new ArrayList<>();
 			
 		}
 	}
