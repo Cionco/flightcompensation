@@ -10,14 +10,16 @@ import user.Command;
 
 public class App {
 	
-	public static InputStream userInput = System.in;
+	public static final InputStream userInput = System.in;
 	
     public static void main(String[] args) {
-    	try (Scanner user = new Scanner(System.in)) {
+    	try (Scanner user = new Scanner(userInput)) {    		
+    		System.out.print("> ");
 	    	while(true) {
 				if(userInput.available() != 0) {
 					String command = user.nextLine();
 					process_command(command);
+					System.out.print("> ");
 				}
 	    	}
     	} catch(IOException e) {
