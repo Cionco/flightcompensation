@@ -21,6 +21,12 @@ public enum Command {
 			DownloadParseSaveController controller = new DownloadParseSaveController();
 			Constraint[] constraints;
 			Class<?> resource;
+			if(params.length != 2) {
+				System.out.println("Syntax Error");
+				help();
+				return;
+			}
+			
 			if(params[1].equals("flights")) {
 				constraints = new Constraint[] {
 						new Constraint("flight_date", () -> LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
@@ -31,6 +37,7 @@ public enum Command {
 				System.out.println(OPTION_NOT_IMPLEMENTED_ERROR);
 				return;
 			} else {
+				System.out.println("Wrong argument error");
 				help();
 				return;
 			}
@@ -47,13 +54,19 @@ public enum Command {
 			System.out.println("Updates Data the specified data\n");
 			System.out.println("Usage of update\n");
 			System.out.println("update <flights|airports>");
+			System.out.println();
 		}
 	},
 	
 	CHECK {
 		public void execute(String... params) {
 			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-			System.out.println("Checking Flight ");
+			if(params.length != 3) {
+				System.out.println("Syntax error");
+				help();
+				return;
+			}
+			System.out.println("Searching Flight...");
 			Flight f = FlightDao.instance.getFlight(params[1],Date.valueOf(params[2]));
 			if(f == null) {
 				System.out.println("Flight not found");
@@ -74,6 +87,7 @@ public enum Command {
 			System.out.println("Checks customer right for specified flight");
 			System.out.println("Usage of check");
 			System.out.println("check <flight number> <flight date yyyy-MM-dd>");
+			System.out.println();
 		}
 	},
 	
