@@ -13,10 +13,10 @@ public class FlightDao extends Dao<Flight> {
 		super(Flight.class);
 	}
 
-	public Flight getFlight(Date flight_date, String flight_number) {
+	public Flight getFlight(String flight_number, Date flight_date) {
 		Flight f = new Flight();
-		f.flight_date = flight_date;
 		f.flight_number = flight_number;
+		f.flight_date = flight_date;
 		return select(f);
 	}
 	

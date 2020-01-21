@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import user.Command;
+
 
 
 public class App {
 	
-	private static InputStream userInput = System.in;
+	public static InputStream userInput = System.in;
 	
     public static void main(String[] args) {
     	try (Scanner user = new Scanner(System.in)) {
@@ -24,6 +26,8 @@ public class App {
     }
     
     private static void process_command(String command) {
-    	
+    	String[] split = command.split(" ");
+    	Command cmd = Command.valueOf(split[0].toUpperCase());
+    	cmd.execute(split);
     }
 }

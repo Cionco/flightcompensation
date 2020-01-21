@@ -107,7 +107,7 @@ public class FlightDataLoader {
 			for(Constraint c : constraints)
 				filter.add(c.key + "=" + c.value.value());
 			filter.add("offset" + "=" + offsetController.value());
-			String url = HOSTNAME + (resource.getName().toLowerCase() + "s") + filter;
+			String url = HOSTNAME + (resource.getSimpleName().toLowerCase() + "s") + filter;
 			
 			e = doGetCall(resource, url);
 			
