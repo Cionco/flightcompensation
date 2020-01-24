@@ -17,9 +17,12 @@ import com.divirad.flightcompensation.monolith.data.api.DataLoader;
 import com.divirad.flightcompensation.monolith.data.api.DataLoader.Constraint;
 import com.divirad.flightcompensation.monolith.data.api.DownloadParseSaveController;
 import com.divirad.flightcompensation.monolith.data.api.Parser;
+import com.divirad.flightcompensation.monolith.data.database.AirportDao;
 import com.divirad.flightcompensation.monolith.data.database.FlightDao;
 
 import lib.StreamThread;
+
+import static lib.SpecialMaths.distance;
 
 public enum Command {
 	
@@ -111,6 +114,13 @@ public enum Command {
 			StreamThread.currentThread().getOut().println("Actual:\t\t" + format.format(f.departure__actual) + "\t->\t" + format.format(f.arrival__actual));
 			
 			StreamThread.currentThread().getOut().printf("Delay:\t\t\t\t\t%02d:%02d:00\n", f.arrival__delay / 60, f.arrival__delay % 60);
+			
+			Airport origin = AirportDao.instance.get(f.departure__iata);
+			Airport destination = AirportDao.instance.get(f.arrival__iata);
+			
+			double distance = distance(origin.latitude, origin.longitude, destination.latitude, destination.longitude, "K");
+			StreamThread.currentThread().getOut().println("Distance between " + origin.airport_name + " and " + destination.airport_name + " is " + distance + "km");
+			
 		}
 		
 		public void help() {
