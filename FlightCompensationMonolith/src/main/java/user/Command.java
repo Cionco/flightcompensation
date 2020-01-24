@@ -6,15 +6,25 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
+import org.json.JSONArray;
+
 import com.divirad.flightcompensation.monolith.App;
+import com.divirad.flightcompensation.monolith.data.Airport;
 import com.divirad.flightcompensation.monolith.data.Flight;
+import com.divirad.flightcompensation.monolith.data.api.DataLoader;
+import com.divirad.flightcompensation.monolith.data.api.DataLoader.Constraint;
 import com.divirad.flightcompensation.monolith.data.api.DownloadParseSaveController;
-import com.divirad.flightcompensation.monolith.data.api.FlightDataLoader;
-import com.divirad.flightcompensation.monolith.data.api.FlightDataLoader.Constraint;
 import com.divirad.flightcompensation.monolith.data.api.Parser;
 import com.divirad.flightcompensation.monolith.data.database.FlightDao;
 
 public enum Command {
+	
+	BACKGROUND {
+		private int output_count;
+		public void execute(String...params) {
+			
+		}
+	},
 
 	UPDATE {
 		public void execute(String...params) {
@@ -34,20 +44,20 @@ public enum Command {
 				};
 				resource = Flight.class;
 			} else if(params[1].equals("airports")) {
-				System.out.println(OPTION_NOT_IMPLEMENTED_ERROR);
-				return;
+				constraints = new Constraint[] {
+						new Constraint("limit", () -> "150")
+				};
+				resource = Airport.class;
 			} else {
 				System.out.println("Wrong argument error");
 				help();
 				return;
 			}
 			
-			FlightDataLoader fdl = FlightDataLoader.getInstance(constraints);
+			DataLoader fdl = DataLoader.getInstance(constraints);
 			fdl.addDownloadListener(controller);
 			Parser.getInstance().addParseListener(controller);
-			new Thread(() -> {
-				fdl.getAllApiData(resource);
-			}).start();
+			fdl.getAllApiData(resource);
 		}
 		
 		public void help() {
@@ -72,15 +82,15 @@ public enum Command {
 				System.out.println("Flight not found");
 				return;
 			}
-			System.out.println("Flight " + f.flight_number + " on day " + f.flight_date);
-			System.out.println("\t\t" + f.origin_airport + "\t->\t" + f.destination_airport);
-			System.out.println("Scheduled:\t" + format.format(f.scheduled_departure) + "\t->\t" + format.format(f.scheduled_arrival));
+			System.out.println("Flight " + f.flight__iata + " on day " + f.flight_date);
+			System.out.println("\t\t" + f.departure__iata + "\t->\t" + f.arrival__iata);
+			System.out.println("Scheduled:\t" + format.format(f.departure__scheduled) + "\t->\t" + format.format(f.arrival__scheduled));
 			System.out.print("Correct Flight? (y/n)");
 			Scanner input = new Scanner(App.userInput);
 			if(!input.nextLine().toUpperCase().equals("Y")) return;
-			System.out.println("Actual:\t\t" + format.format(f.actual_departure) + "\t->\t" + format.format(f.actual_arrival));
+			System.out.println("Actual:\t\t" + format.format(f.departure__actual) + "\t->\t" + format.format(f.arrival__actual));
 			
-			System.out.printf("Delay:\t\t\t\t\t%02d:%02d:00\n", f.arrival_delay / 60, f.arrival_delay % 60);
+			System.out.printf("Delay:\t\t\t\t\t%02d:%02d:00\n", f.arrival__delay / 60, f.arrival__delay % 60);
 		}
 		
 		public void help() {

@@ -14,6 +14,8 @@ public class DownloadEvent<T> {
 	private int offset;
 	private int total;
 	
+	private boolean is_last_download = false;
+	
 	public DownloadEvent(Class<T> resource) {
 		this.resource = resource;
 	}
@@ -59,6 +61,10 @@ public class DownloadEvent<T> {
 	public void setTotal(int total) {
 		this.total = total;
 	}
+	
+	public void setIsLastDownload(boolean is_last) {
+		this.is_last_download = is_last;
+	}
 
 	public Class<T> getResource() {
 		return resource;
@@ -88,5 +94,8 @@ public class DownloadEvent<T> {
 		return total;
 	}
 	
+	public boolean isLastDownload() {
+		return is_last_download;
+	}
 	
 }

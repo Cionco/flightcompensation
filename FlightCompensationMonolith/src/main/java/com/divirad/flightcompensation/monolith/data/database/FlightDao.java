@@ -15,7 +15,7 @@ public class FlightDao extends Dao<Flight> {
 
 	public Flight getFlight(String flight_number, Date flight_date) {
 		Flight f = new Flight();
-		f.flight_number = flight_number;
+		f.flight__iata = flight_number;
 		f.flight_date = flight_date;
 		return select(f);
 	}

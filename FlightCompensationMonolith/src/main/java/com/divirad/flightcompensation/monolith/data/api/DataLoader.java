@@ -11,13 +11,13 @@ import javax.swing.event.EventListenerList;
 
 import org.json.JSONObject;
 
-public class FlightDataLoader {
+public class DataLoader {
 	
 	private static final String HOSTNAME = "https://api.aviationstack.com/v1/";
 	private static final String ACCESS_KEY = "fd5dc26aa131c9e7f60f5ce54cf459ce";
 	private static final int LIMIT = 100;
 
-	public static FlightDataLoader instance;
+	public static DataLoader instance;
 	
 	private EventListenerList listenerList = new EventListenerList();
 	
@@ -35,15 +35,28 @@ public class FlightDataLoader {
 		}
 	};
 	
-	private ArrayList<Constraint> constraints = new ArrayList<>();
+	private ArrayList<Constraint> constraints = new ArrayList<Constraint>() {
+		public int indexOf(Object o) {
+	        if (o == null) {
+	            for (int i = 0; i < this.size(); i++)
+	                if (this.get(i)==null)
+	                    return i;
+	        } else {
+	            for (int i = 0; i < this.size(); i++)
+	                if (this.get(i).equals(o))
+	                    return i;
+	        }
+	        return -1;
+	    }
+	};
 	
-	private FlightDataLoader(Constraint... constraints) {
+	private DataLoader(Constraint... constraints) {
 		for(Constraint c : constraints)
 			this.constraints.add(c);
 	}
 	
-	public static FlightDataLoader getInstance(Constraint... constraints) {
-		if(instance == null) instance = new FlightDataLoader(constraints);
+	public static DataLoader getInstance(Constraint... constraints) {
+		if(instance == null) instance = new DataLoader(constraints);
 		return instance;
 	}
 	
@@ -73,13 +86,6 @@ public class FlightDataLoader {
 		}
 	}
 	
-	protected void fireDoneDownloading() {
-		DownloadListener[] listeners = getDownloadListeners();
-		for(DownloadListener l : listeners) {
-			l.doneDownloading();
-		}
-	}
-	
 	public DownloadListener[] getDownloadListeners() {
 		return (DownloadListener[]) listenerList.getListeners(DownloadListener.class);
 	}
@@ -89,9 +95,13 @@ public class FlightDataLoader {
 		filter.add("access_key=" + ACCESS_KEY);
 		for(Constraint c : constraints)
 			filter.add(c.key + "=" + c.value.value());
-		String url = HOSTNAME + (resource.getName().toLowerCase() + "s") + filter;
+		String url = HOSTNAME + (resource.getSimpleName().toLowerCase() + "s") + filter;
 
 		DownloadEvent<T> e = doGetCall(resource, url);
+		JSONObject pagination = e.getResult().getJSONObject("pagination");
+		e.setElements(pagination.getInt("count"));
+		e.setTotal(pagination.getInt("limit"));
+		e.setOffset(pagination.getInt("offset"));
 		
 		fireDownloaded(e);
 		return e.getResult();
@@ -100,23 +110,31 @@ public class FlightDataLoader {
 	public <T> void getAllApiData(Class<T> resource) {
 		DownloadEvent<T> e;
 		fireStartingMultiDownload();
+		int limit = 0;
+		if(constraints.contains("limit"))
+			limit = Integer.parseInt(constraints.get(constraints.indexOf("limit")).value.value());
 		do {
 			System.out.println("New Request");
 			StringJoiner filter = new StringJoiner("&", "?", "");
 			filter.add("access_key=" + ACCESS_KEY);
-			for(Constraint c : constraints)
-				filter.add(c.key + "=" + c.value.value());
-			filter.add("offset" + "=" + offsetController.value());
+			int offset = Integer.parseInt(offsetController.value());
+			for(Constraint c : constraints) {
+				if(c.equals("limit") && limit - offset - 100 < 0)
+					filter.add(c.key + "=" + (Integer.parseInt(c.value.value()) - offset));
+				else if(!c.equals("limit"))
+					filter.add(c.key + "=" + c.value.value());
+			}
+			filter.add("offset" + "=" + offset);
 			String url = HOSTNAME + (resource.getSimpleName().toLowerCase() + "s") + filter;
 			
 			e = doGetCall(resource, url);
 			
 			JSONObject pagination = e.getResult().getJSONObject("pagination");
-			e.setElements(pagination.getInt("limit"));
-			e.setTotal(pagination.getInt("total"));
+			e.setElements(pagination.getInt("count"));
+			e.setTotal(limit == 0 ? pagination.getInt("total") : limit);
 			e.setOffset(pagination.getInt("offset"));
 			if(e.getOffset() + e.getElements() >= e.getTotal())
-				fireDoneDownloading();
+				e.setIsLastDownload(true);
 			fireDownloaded(e);
 		} while(e.getOffset() + e.getElements() < e.getTotal());
 		
@@ -156,6 +174,13 @@ public class FlightDataLoader {
 		public Constraint(String key, IDetValue value) {
 			this.key = key;
 			this.value = value;
+		}
+		
+		@Override
+		public boolean equals(Object o) {
+			if(o instanceof String)
+				return key.equals(o);
+			return false;
 		}
 	}
 	

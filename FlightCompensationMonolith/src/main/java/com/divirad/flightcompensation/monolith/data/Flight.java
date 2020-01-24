@@ -11,20 +11,20 @@ public final class Flight {
 	@MysqlMarker.PrimaryKey
 	public Date flight_date;
 	@MysqlMarker.PrimaryKey
-	public String flight_number;
+	public String flight__iata;
 	
-	public int flight_status;
+	public String flight_status;
 	
-	public Timestamp scheduled_departure;
-	public Timestamp actual_departure;
-	public Timestamp scheduled_arrival;
-	public Timestamp actual_arrival;
+	public Timestamp departure__scheduled;
+	public Timestamp departure__actual;
+	public Timestamp arrival__scheduled;
+	public Timestamp arrival__actual;
 	
-	public int departure_delay;
-	public Integer arrival_delay;
+	public int departure__delay;
+	public Integer arrival__delay;
 	
-	public String origin_airport;
-	public String destination_airport;
+	public String departure__iata;
+	public String arrival__iata;
 	
 	public Flight() {}
 	
@@ -34,7 +34,7 @@ public final class Flight {
 		
 		sb.append(flight_date);
 		sb.append(" ");
-		sb.append(flight_number);
+		sb.append(flight__iata);
 		return sb.toString();
 	}
 }
