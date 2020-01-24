@@ -7,6 +7,8 @@ import com.divirad.flightcompensation.monolith.data.Flight;
 import com.divirad.flightcompensation.monolith.data.database.AirportDao;
 import com.divirad.flightcompensation.monolith.data.database.FlightDao;
 
+import lib.StreamThread;
+
 public class DownloadParseSaveController implements DownloadListener, ParseListener {
 
 	private int downloaded_objects = 0;
@@ -24,10 +26,10 @@ public class DownloadParseSaveController implements DownloadListener, ParseListe
 	
 	@Override
 	public void dataDownloaded(DownloadEvent<?> e) {
-		System.out.println("Recieved new Data (" + Math.min(e.getOffset() + e.getElements(), e.getTotal()) + "/" + e.getTotal() + ")");
+		StreamThread.currentThread().getOut().println("Recieved new Data (" + Math.min(e.getOffset() + e.getElements(), e.getTotal()) + "/" + e.getTotal() + ")");
 		downloaded_objects++;
 		if(e.isLastDownload()) {
-			System.out.println("All " + downloaded_objects + " objects downloaded");
+			StreamThread.currentThread().getOut().println("All " + downloaded_objects + " objects downloaded");
 			downloading = false;
 		}
 		Parser.getInstance().parseData(e.getResource(), e.getResult().getJSONArray("data"));
@@ -37,7 +39,7 @@ public class DownloadParseSaveController implements DownloadListener, ParseListe
 	public void jsonParsed(ParseEvent<?> e) {
 		parsed.addAll(e.getResult());
 		if(!downloading) {
-			System.out.println("Done parsing, writing to db");
+			StreamThread.currentThread().getOut().println("Done parsing, writing to db");
 			if(e.getResource() == Flight.class)
 				FlightDao.instance.storeFlights(typifyArrayList(parsed));
 			else if(e.getResource() == Airport.class) {
@@ -49,7 +51,7 @@ public class DownloadParseSaveController implements DownloadListener, ParseListe
 
 	@Override
 	public void objectParsed(ParseEvent<?> e) {
-		System.out.println("Parsed object: " + e.getResult().get(0));
+		StreamThread.currentThread().getOut().println("Parsed object: " + e.getResult().get(0));
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -11,6 +11,8 @@ import javax.swing.event.EventListenerList;
 
 import org.json.JSONObject;
 
+import lib.StreamThread;
+
 public class DataLoader {
 	
 	private static final String HOSTNAME = "https://api.aviationstack.com/v1/";
@@ -114,7 +116,7 @@ public class DataLoader {
 		if(constraints.contains("limit"))
 			limit = Integer.parseInt(constraints.get(constraints.indexOf("limit")).value.value());
 		do {
-			System.out.println("New Request");
+			StreamThread.currentThread().getOut().println("New Request");
 			StringJoiner filter = new StringJoiner("&", "?", "");
 			filter.add("access_key=" + ACCESS_KEY);
 			int offset = Integer.parseInt(offsetController.value());
