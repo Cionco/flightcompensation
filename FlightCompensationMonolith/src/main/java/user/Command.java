@@ -68,7 +68,7 @@ public enum Command {
 				resource = Flight.class;
 			} else if(params[1].equals("airports")) {
 				constraints = new Constraint[] {
-						new Constraint("limit", () -> "150")
+						//new Constraint("limit", () -> "150")
 				};
 				resource = Airport.class;
 			} else {
