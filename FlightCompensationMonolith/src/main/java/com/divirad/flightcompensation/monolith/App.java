@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
-import lib.StreamThread;
-import user.Command;
+import com.divirad.flightcompensation.monolith.lib.StreamThread;
+import com.divirad.flightcompensation.monolith.user.Command;
 
 
 

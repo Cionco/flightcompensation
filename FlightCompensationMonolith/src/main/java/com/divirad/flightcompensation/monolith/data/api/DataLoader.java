@@ -11,7 +11,7 @@ import javax.swing.event.EventListenerList;
 
 import org.json.JSONObject;
 
-import lib.StreamThread;
+import com.divirad.flightcompensation.monolith.lib.StreamThread;
 
 public class DataLoader {
 	

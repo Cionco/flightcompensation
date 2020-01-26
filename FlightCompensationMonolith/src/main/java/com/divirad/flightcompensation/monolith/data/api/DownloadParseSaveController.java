@@ -7,7 +7,7 @@ import com.divirad.flightcompensation.monolith.data.Flight;
 import com.divirad.flightcompensation.monolith.data.database.AirportDao;
 import com.divirad.flightcompensation.monolith.data.database.FlightDao;
 
-import lib.StreamThread;
+import com.divirad.flightcompensation.monolith.lib.StreamThread;
 
 public class DownloadParseSaveController implements DownloadListener, ParseListener {
 

@@ -1,4 +1,4 @@
-package lib;
+package com.divirad.flightcompensation.monolith.lib;
 
 public class SpecialMaths {
 	

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.divirad.flightcompensation.monolith.data.Airport;
 
-import lib.StreamThread;
+import com.divirad.flightcompensation.monolith.lib.StreamThread;
 
 public class AirportDao extends Dao<Airport> {
 

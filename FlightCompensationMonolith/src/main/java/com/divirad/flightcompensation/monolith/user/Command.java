@@ -1,6 +1,6 @@
-package user;
+package com.divirad.flightcompensation.monolith.user;
 
-import static lib.SpecialMaths.distance;
+import static com.divirad.flightcompensation.monolith.lib.SpecialMaths.distance;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,7 +23,7 @@ import com.divirad.flightcompensation.monolith.data.api.Parser;
 import com.divirad.flightcompensation.monolith.data.database.AirportDao;
 import com.divirad.flightcompensation.monolith.data.database.FlightDao;
 
-import lib.StreamThread;
+import com.divirad.flightcompensation.monolith.lib.StreamThread;
 
 public enum Command {
 	
