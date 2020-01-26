@@ -12,15 +12,15 @@ import lib.StreamThread;
 public class DownloadParseSaveController implements DownloadListener, ParseListener {
 
 	private int downloaded_objects = 0;
-	private int parsed_jsons = 0;
+	//private int parsed_jsons = 0;
 	private boolean downloading = false;
 	
 	private ArrayList<Object> parsed = new ArrayList<>();
 	
 	@Override
 	public void startingMultiDownload() {
-		//downloaded_objects = 0;
-		parsed_jsons = 0;
+		downloaded_objects = 0;
+		//parsed_jsons = 0;
 		downloading = true;
 	}
 	

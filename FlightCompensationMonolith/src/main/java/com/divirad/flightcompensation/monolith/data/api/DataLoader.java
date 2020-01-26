@@ -38,6 +38,8 @@ public class DataLoader {
 	};
 	
 	private ArrayList<Constraint> constraints = new ArrayList<Constraint>() {
+		private static final long serialVersionUID = 8934892856813631325L;
+
 		public int indexOf(Object o) {
 	        if (o == null) {
 	            for (int i = 0; i < this.size(); i++)
@@ -109,6 +111,7 @@ public class DataLoader {
 		return e.getResult();
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	public <T> void getAllApiData(Class<T> resource) {
 		DownloadEvent<T> e;
 		fireStartingMultiDownload();

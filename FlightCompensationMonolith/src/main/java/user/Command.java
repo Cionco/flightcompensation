@@ -110,7 +110,9 @@ public enum Command {
 			StreamThread.currentThread().getOut().println("Scheduled:\t" + format.format(f.departure__scheduled) + "\t->\t" + format.format(f.arrival__scheduled));
 			StreamThread.currentThread().getOut().print("Correct Flight? (y/n)");
 			Scanner input = new Scanner(App.userInput);
-			if(!input.nextLine().toUpperCase().equals("Y")) return;
+			String choice = input.nextLine().toUpperCase();
+			input.close();
+			if(!choice.equals("Y")) return;
 			StreamThread.currentThread().getOut().println("Actual:\t\t" + format.format(f.departure__actual) + "\t->\t" + format.format(f.arrival__actual));
 			
 			StreamThread.currentThread().getOut().printf("Delay:\t\t\t\t\t%02d:%02d:00\n", f.arrival__delay / 60, f.arrival__delay % 60);
@@ -138,6 +140,7 @@ public enum Command {
 	};
 	
 	private static final String COMMAND_NOT_IMPLEMENTED_ERROR = "Command is not implemented yet";
+	@SuppressWarnings("unused")
 	private static final String OPTION_NOT_IMPLEMENTED_ERROR = "Option is not implemented yet, try other options";
 	
 	public void execute(String...params) {

@@ -13,9 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.divirad.flightcompensation.monolith.data.Airport;
-import com.divirad.flightcompensation.monolith.data.Flight;
-import com.divirad.flightcompensation.monolith.data.database.FlightStatusDao;
 import com.divirad.flightcompensation.monolith.data.database.MysqlMarker;
 
 public final class Parser {
@@ -63,7 +60,6 @@ public final class Parser {
 		return (ParseListener[]) listeners.getListeners(ParseListener.class);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <T> ArrayList<T> parseData(Class<T> resource_type, JSONArray data) {
 		if (!Modifier.isFinal(resource_type.getModifiers()))
             throw new IllegalArgumentException("Can't use class: must be final");
