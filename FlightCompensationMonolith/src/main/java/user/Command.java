@@ -63,7 +63,7 @@ public enum Command {
 			if(params[1].equals("flights")) {
 				constraints = new Constraint[] {
 						new Constraint("flight_date", () -> LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-					,	new Constraint("dep_iata", () -> "haj")
+					,	new Constraint("dep_iata", () -> "fra")
 				};
 				resource = Flight.class;
 			} else if(params[1].equals("airports")) {
@@ -117,12 +117,24 @@ public enum Command {
 			
 			StreamThread.currentThread().getOut().printf("Delay:\t\t\t\t\t%02d:%02d:00\n", f.arrival__delay / 60, f.arrival__delay % 60);
 			
+			if(f.arrival__delay < 180) {
+				StreamThread.currentThread().getOut().println("Flight delayed less than three hours");
+				StreamThread.currentThread().getOut().println("Airline is not obligated to pay");
+				return;
+			}
+			
 			Airport origin = AirportDao.instance.get(f.departure__iata);
 			Airport destination = AirportDao.instance.get(f.arrival__iata);
 			
 			double distance = distance(origin.latitude, origin.longitude, destination.latitude, destination.longitude, "K");
 			StreamThread.currentThread().getOut().println("Distance between " + origin.airport_name + " and " + destination.airport_name + " is " + distance + "km");
 			
+			double compensation;
+			if(distance <= 1500) compensation = 250;
+			else if(distance <= 3500) compensation = 400;
+			else compensation = 600;
+			
+			StreamThread.currentThread().getOut().println("You can get a cash compensation of " + compensation / (f.arrival__delay < 240 ? 2 : 1) + "€");
 		}
 		
 		public void help() {
@@ -130,6 +142,12 @@ public enum Command {
 			StreamThread.currentThread().getOut().println("Usage of check");
 			StreamThread.currentThread().getOut().println("check <flight number> <flight date yyyy-MM-dd>");
 			StreamThread.currentThread().getOut().println();
+		}
+	},
+	
+	LIST {
+		public void execute(String... params) {
+			
 		}
 	},
 	
