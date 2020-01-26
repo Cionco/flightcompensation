@@ -20,6 +20,12 @@ public class FlightDao extends Dao<Flight> {
 		return select(f);
 	}
 	
+	public ArrayList<Flight> getFlights(Date flight_date) {
+		return Database.query("SELECT * FROM Flight WHERE flight_date = ?", 
+				ps -> ps.setDate(1, flight_date), 
+				rs -> convAllInResultSet(rs));
+	}
+	
 	public void storeFlights(ArrayList<Flight> flights) {
 		insertAll(flights);
 	}

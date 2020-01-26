@@ -12,7 +12,8 @@ public class Database {
 	private final static String DATABASE = "ttEVjJHKRv";
 	private final static String USERNAME = "ttEVjJHKRv";
 	private final static String PASSWORD = "m6EYacRlzZ";
-	private final static String PARAMS	 = "serverTimezone=Europe/Berlin";
+	private final static String PARAMS	 = "useLegacyDatetimeCode=false&serverTimezone=UTC";
+	//private final static String PARAMS	 = "";
 	
     public interface ISetParams {
         void run(PreparedStatement ps) throws SQLException;

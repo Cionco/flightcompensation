@@ -1,5 +1,7 @@
 package user;
 
+import static lib.SpecialMaths.distance;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,6 +10,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.divirad.flightcompensation.monolith.App;
@@ -21,8 +24,6 @@ import com.divirad.flightcompensation.monolith.data.database.AirportDao;
 import com.divirad.flightcompensation.monolith.data.database.FlightDao;
 
 import lib.StreamThread;
-
-import static lib.SpecialMaths.distance;
 
 public enum Command {
 	
@@ -147,7 +148,11 @@ public enum Command {
 	
 	LIST {
 		public void execute(String... params) {
-			
+			ArrayList<Flight> flights = FlightDao.instance.getFlights(Date.valueOf(params[1]));
+			int i = 1;
+			for(Flight f : flights) {
+				StreamThread.currentThread().getOut().println(i++ + ". " + f);
+			}
 		}
 	},
 	
