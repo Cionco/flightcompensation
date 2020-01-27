@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+
+    <!-- Default set of monitored resources -->
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+         
+    <Resource
+		name="jdbc/Transformer"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="com.mysql.cj.jdbc.Driver"
+		url="jdbc:mysql://remotemysql.com:3306/v5VqRNfGQz"
+		username="v5VqRNfGQz"
+		password="9lsBd3AN3x"
+		maxActive="15"
+		maxIdle="3"
+		
+		validationQuery="/* ping */"
+		testOnBorrow="true"
+		testWhileIdle="true"
+		timeBetweenEvictionRunsMillis="10000"
+		minEvictableIdleTimeMillis="60000"
+		
+		maxWait="-1" />
+
+</Context>
