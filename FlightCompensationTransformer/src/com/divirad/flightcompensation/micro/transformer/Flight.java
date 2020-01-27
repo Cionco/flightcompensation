@@ -37,10 +37,18 @@ public class Flight extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String flight_number = request.getParameter("flight_number");
-		Date date = Date.valueOf(request.getParameter("flight_date"));
-		com.divirad.flightcompensation.monolith.data.Flight f = FlightDao.instance.getFlight(flight_number, date);
-		response.getWriter().append(f.toJson().toString());
+		try {
+			String flight_number = request.getParameter("flight_number");
+			Date date = Date.valueOf(request.getParameter("flight_date"));
+			com.divirad.flightcompensation.monolith.data.Flight f = FlightDao.instance.getFlight(flight_number, date);
+			response.getWriter().append(f.toJson().toString());
+		} catch(Exception e) {
+			e.printStackTrace();
+			JSONObject result = new JSONObject();
+			result.put("response_code", 500);
+			result.put("message", e.getMessage());
+			response.getWriter().append(result.toString());
+		}
 	}
 
 	/**
