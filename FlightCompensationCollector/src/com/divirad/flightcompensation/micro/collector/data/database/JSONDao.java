@@ -5,7 +5,6 @@ import java.sql.Date;
 import org.json.JSONArray;
 
 import com.divirad.flightcompensation.micro.collector.server.JSON;
-import com.divirad.flightcompensation.monolith.data.database.Dao;
 
 public class JSONDao extends Dao<JSON>{
 
@@ -29,5 +28,11 @@ public class JSONDao extends Dao<JSON>{
 		j.date = date;
 		j.type = type;
 		return select(j);
+	}
+
+	public JSON get(String simpleName) {
+		return Database.query("SELECT * FROM JSON WHERE type = ? ORDER BY date desc LIMIT 1"
+				, ps -> ps.setString(1, simpleName)
+				, rs -> convFirstInResultSet(rs));
 	}
 }

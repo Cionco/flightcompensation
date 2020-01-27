@@ -9,7 +9,7 @@
 		name="jdbc/Collector"
 		auth="Container"
 		type="javax.sql.DataSource"
-		driverClassName="com.mysql.jdbc.Driver"
+		driverClassName="com.mysql.cj.jdbc.Driver"
 		url="jdbc:mysql://remotemysql.com:3306/YSfrP1ajKo"
 		username="YSfrP1ajKo"
 		password="GUzhJ6avym"
