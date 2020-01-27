@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import com.divirad.flightcompensation.micro.transformer.data.database.FlightDao;
 import com.divirad.flightcompensation.monolith.data.api.Parser;
 
 /**
@@ -36,8 +37,10 @@ public class Flight extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String flight_number = request.getParameter("flight_number");
+		Date date = Date.valueOf(request.getParameter("flight_date"));
+		com.divirad.flightcompensation.monolith.data.Flight f = FlightDao.instance.getFlight(flight_number, date);
+		response.getWriter().append(f.toJson().toString());
 	}
 
 	/**
