@@ -12,15 +12,7 @@ public class AirportDao extends Dao<Airport> {
 	}
 	
 	public void updateAirports(ArrayList<Airport> airports) {
-		for(Airport a : airports) {
-			if(get(a.iata_code) != null) {
-				System.out.println("Updating " + a.iata_code);
-				update(a);
-			} else {
-				System.out.println("Inserting " + a.iata_code);
-				insert(a);
-			}
-		}
+		replaceAll(airports);
 	}
 	
 	public Airport get(String iata) {

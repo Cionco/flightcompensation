@@ -35,6 +35,7 @@ public class Dao<T> {
     protected String sql_insert;
     protected String sql_select;
     protected String sql_update;
+    protected String sql_replace;
 
     protected Field[] primaryKeys;
     protected Field[] notAutomatedKeys;
@@ -109,6 +110,7 @@ public class Dao<T> {
             sql_insert = "INSERT INTO " + this.tableName + " " + field_list + " VALUES " + param_list;
         sql_select = "SELECT * FROM " + this.tableName + " WHERE " + primary_list;
         sql_update = "UPDATE " + this.tableName + " SET " + field_update_list + " WHERE " + primary_list;
+        sql_replace = "REPLACE INTO " + this.tableName + " " + field_list + " VALUES " + param_list;
     }
 
     /**
@@ -231,14 +233,14 @@ public class Dao<T> {
      * @param data List with all the data that should be inserted. All fields of all elements will be inserted.
      */
     protected void insertAll(ArrayList<T> data) {
-    	String sql_multi_insert = new String(sql_insert);
-    	for(int i = 1; i < data.size(); i++) sql_multi_insert += "," + param_list;
-    	
-    	Database.execute(sql_multi_insert, ps -> {
-    		int index = 1;
-    		for(T t : data)
-    			index = setParams(ps, t, this.notAutomatedKeys, index);
-    	});
+	    	String sql_multi_insert = new String(sql_insert);
+	    	for(int i = 1; i < data.size(); i++) sql_multi_insert += "," + param_list;
+	    	
+	    	Database.execute(sql_multi_insert, ps -> {
+	    		int index = 1;
+	    		for(T t : data)
+	    			index = setParams(ps, t, this.notAutomatedKeys, index);
+	    	});
     }
 
     /**
@@ -256,6 +258,37 @@ public class Dao<T> {
             int nextIndex = setParams(ps, data, this.allFields, 1);
             setParams(ps, data, this.primaryKeys, nextIndex);
         });
+    }
+    
+    /**
+     * Replaces a row in the mysql table. Only available if class represents whole mysql table
+     * 
+     * @param data contains the data that should be replaced. All fields of all elements will be inserted/updated.
+     */
+    protected void replace(T data) {
+    		if(!this.isWholeTable)
+    			throw new UnsupportedOperationException(
+    					"Usage of replace is not possible: " + this.cls.getName() + " does not represent whole mysql table");
+    		Database.execute(sql_replace, ps -> {
+    			int nextIndex = setParams(ps, data, this.allFields, 1);
+    			setParams(ps, data, this.primaryKeys, nextIndex);
+    		});
+    }
+    
+    /**
+     * Replaces (new) rows in the mysql table. Only available if class represents whole mysql table
+     * 
+     * @param data List with all the data that should be replaced. All fields of all elements will be inserted/updated.
+     */
+    protected void replaceAll(ArrayList<T> data) {
+	    	String sql_multi_replace = new String(sql_replace);
+	    	for(int i = 1; i < data.size(); i++) sql_multi_replace += "," + param_list;
+	    	
+	    	Database.execute(sql_multi_replace, ps -> {
+	    		int index = 1;
+	    		for(T t : data)
+	    			index = setParams(ps, t, this.notAutomatedKeys, index);
+	    	});
     }
 
     /**
