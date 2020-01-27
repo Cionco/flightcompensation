@@ -37,7 +37,7 @@ public class Airport extends HttpServlet {
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			String iata = request.getParameter("iata");
+			String iata = request.getParameter("departure__iata");
 			com.divirad.flightcompensation.monolith.data.Airport a = AirportDao.instance.get(iata);
 			response.getWriter().append(a.toJson().toString());
 		} catch(Exception e) {

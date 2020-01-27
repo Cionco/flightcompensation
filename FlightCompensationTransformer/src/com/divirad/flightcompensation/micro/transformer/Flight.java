@@ -38,7 +38,7 @@ public class Flight extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			String flight_number = request.getParameter("flight_number");
+			String flight_number = request.getParameter("flight__iata");
 			Date date = Date.valueOf(request.getParameter("flight_date"));
 			com.divirad.flightcompensation.monolith.data.Flight f = FlightDao.instance.getFlight(flight_number, date);
 			response.getWriter().append(f.toJson().toString());
@@ -59,7 +59,7 @@ public class Flight extends HttpServlet {
 		String output = "";
 		JSONObject result;
 		try {
-			URL obj = new URL("http://localhost:8080/FlightCompensationCollector/flights?date=" + date);
+			URL obj = new URL("http://localhost:8080/FlightCompensationCollector/flights?flight_date=" + date);
 			HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
 			conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
 		    conn.setDoOutput(false);

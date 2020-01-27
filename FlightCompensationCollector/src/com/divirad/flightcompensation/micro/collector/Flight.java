@@ -36,7 +36,7 @@ public class Flight extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Hello");
-		Date date = Date.valueOf(request.getParameter("date"));
+		Date date = Date.valueOf(request.getParameter("flight_date"));
 		JSON j = JSONDao.instance.get(com.divirad.flightcompensation.monolith.data.Flight.class.getSimpleName(), date);
 		
 		response.getWriter().append(j.toJson().toString());
@@ -50,8 +50,7 @@ public class Flight extends HttpServlet {
 		controller.setNewDataDate(Date.valueOf(request.getParameter("flight_date")));
 		Constraint[] constraints = new Constraint[] {
 				new Constraint("flight_date", () -> controller.getNewDataDate().toString()),
-				new Constraint("dep_iata", () -> "fra"),
-				new Constraint("limit", () -> "50")
+				new Constraint("dep_iata", () -> "fra")
 		};
 		
 		DataLoader dl = new DataLoader(constraints);
