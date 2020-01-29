@@ -59,7 +59,8 @@ public class CheckServlet extends HttpServlet {
 		System.out.println(f);
 		
 		
-		
+		out.println("<meta http-equiv=\"content-type\" content=\"text/html; charset=iso-8859-1\">");
+		out.println("<pre style=\"word-wrap: break-word; white-space: pre-wrap;\">");
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 		if(f == null) {
 			out.println("Flight not found");
@@ -90,9 +91,9 @@ public class CheckServlet extends HttpServlet {
 		else if(distance <= 3500) compensation = 400;
 		else compensation = 600;
 		
-		out.println("You can get a cash compensation of " + compensation / (f.arrival__delay < 240 ? 2 : 1) + "€");
+		out.println("You can get a cash compensation of " + compensation / (f.arrival__delay < 240 ? 2 : 1) + " Euros");
 	
-		
+		out.println("</pre>");
 		
 	}
 
