@@ -128,7 +128,6 @@ public class DataLoader {
 		if(constraints.contains("limit"))
 			limit = Integer.parseInt(constraints.get(constraints.indexOf("limit")).value.value());
 		do {
-			System.out.println("New Request");
 			StringJoiner filter = new StringJoiner("&", "?", "");
 			filter.add("access_key=" + ACCESS_KEY);
 			int offset = Integer.parseInt(offsetController.value());

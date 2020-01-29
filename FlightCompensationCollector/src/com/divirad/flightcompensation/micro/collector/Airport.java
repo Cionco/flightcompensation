@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
+
 import com.divirad.flightcompensation.micro.collector.data.api.DataLoader;
 import com.divirad.flightcompensation.micro.collector.data.api.DownloadController;
 import com.divirad.flightcompensation.micro.collector.data.api.DataLoader.Constraint;
@@ -46,14 +48,27 @@ public class Airport extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		DownloadController controller = new DownloadController();
-		controller.setNewDataDate(new Date(new java.util.Date().getTime()));
-		Constraint[] constraints = new Constraint[] {};
-		
-		DataLoader dl = new DataLoader(constraints);
-		dl.addDownloadListener(controller);
-		dl.getAllApiData(com.divirad.flightcompensation.monolith.data.Airport.class);
-		
+		JSONObject result;
+		try {
+			DownloadController controller = new DownloadController();
+			controller.setNewDataDate(new Date(new java.util.Date().getTime()));
+			Constraint[] constraints = new Constraint[] {};
+			
+			DataLoader dl = new DataLoader(constraints);
+			dl.addDownloadListener(controller);
+			dl.getAllApiData(com.divirad.flightcompensation.monolith.data.Airport.class);
+			
+			
+			result = new JSONObject();
+			result.put("response_code", 200);
+			result.put("message", "JSONs concatinated and stored to DB");
+		} catch(Exception e) {
+			e.printStackTrace();
+			result = new JSONObject();
+			result.put("response_code", 500);
+			result.put("message", e.getMessage());
+		}
+		response.getWriter().append(result.toString());
 	}
 
 }
