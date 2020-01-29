@@ -58,6 +58,7 @@ public class Flight extends HttpServlet {
 		Date date = Date.valueOf(request.getParameter("flight_date"));
 		String output = "";
 		JSONObject result;
+		long time_before = System.currentTimeMillis();
 		try {
 			URL obj = new URL("http://localhost:8080/FlightCompensationCollector/flights?flight_date=" + date);
 			HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
@@ -79,6 +80,7 @@ public class Flight extends HttpServlet {
 			result.put("response_code", 500);
 			result.put("message", e.getMessage());
 		}
+		System.out.println("Operation took " + (System.currentTimeMillis() - time_before) + " milliseconds");
 		response.getWriter().append(result.toString());
 	}
 }

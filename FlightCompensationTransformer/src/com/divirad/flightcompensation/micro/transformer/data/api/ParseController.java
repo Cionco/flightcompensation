@@ -22,7 +22,7 @@ public class ParseController implements ParseListener {
 
 	@Override
 	public void objectParsed(ParseEvent<?> e) {
-		System.out.println("Parsed object: " + e.getResult().get(0));
+		//System.out.println("Parsed object: " + e.getResult().get(0));
 	}
 	
 	@SuppressWarnings("unchecked")
