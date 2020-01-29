@@ -27,15 +27,27 @@ public class DataLoader {
 		public String value();
 	}
 	
-	private IDetValue offsetController = new IDetValue() {
+	private class OffsetController implements IDetValue, DownloadListener {
 		int offset = 0;
 		
+		@Override
+		public void startingMultiDownload() {
+			offset = 0;
+		}
+
+		@Override
+		public void dataDownloaded(DownloadEvent<?> e) {}
+
+		@Override
 		public String value() {
 			int return_value = offset;
 			offset += LIMIT;
 			return Integer.toString(return_value);
 		}
-	};
+		
+	}
+	
+	private OffsetController offsetController = new OffsetController();
 	
 	private ArrayList<Constraint> constraints = new ArrayList<Constraint>() {
 		private static final long serialVersionUID = 8934892856813631325L;
@@ -55,13 +67,29 @@ public class DataLoader {
 	};
 	
 	private DataLoader(Constraint... constraints) {
+		this.addDownloadListener(offsetController);
 		for(Constraint c : constraints)
 			this.constraints.add(c);
+	}
+	
+	private DataLoader() {
+		this.addDownloadListener(offsetController);
 	}
 	
 	public static DataLoader getInstance(Constraint... constraints) {
 		if(instance == null) instance = new DataLoader(constraints);
 		return instance;
+	}
+	
+	public static DataLoader getInstance() {
+		if(instance == null) instance = new DataLoader();
+		return instance;
+	}
+	
+	public void setConstraints(Constraint... constraints) {
+		this.constraints.remove(this.constraints);
+		for(Constraint c : constraints)
+			this.constraints.add(c);
 	}
 	
 	public void addDownloadListener(DownloadListener l) {
@@ -119,7 +147,7 @@ public class DataLoader {
 		if(constraints.contains("limit"))
 			limit = Integer.parseInt(constraints.get(constraints.indexOf("limit")).value.value());
 		do {
-			StreamThread.currentThread().getOut().println("New Request");
+			//StreamThread.currentThread().getOut().println("New Request");
 			StringJoiner filter = new StringJoiner("&", "?", "");
 			filter.add("access_key=" + ACCESS_KEY);
 			int offset = Integer.parseInt(offsetController.value());

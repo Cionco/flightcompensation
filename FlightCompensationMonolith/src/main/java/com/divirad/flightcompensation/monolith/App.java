@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import com.divirad.flightcompensation.monolith.data.api.DataLoader;
+import com.divirad.flightcompensation.monolith.data.api.DownloadParseSaveController;
+import com.divirad.flightcompensation.monolith.data.api.Parser;
 import com.divirad.flightcompensation.monolith.lib.StreamThread;
 import com.divirad.flightcompensation.monolith.user.Command;
 
@@ -14,6 +17,9 @@ public class App {
 	public static final InputStream userInput = System.in;
 	
     public static void main(String[] args) {
+    	DownloadParseSaveController controller = new DownloadParseSaveController();
+    	DataLoader.getInstance().addDownloadListener(controller);
+    	Parser.getInstance().addParseListener(controller);
     	StreamThread main = new StreamThread(() -> {
     		try (Scanner user = new Scanner(userInput)) {    		
     			System.out.print("> ");

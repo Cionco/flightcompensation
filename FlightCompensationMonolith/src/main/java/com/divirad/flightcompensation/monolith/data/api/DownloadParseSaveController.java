@@ -51,7 +51,7 @@ public class DownloadParseSaveController implements DownloadListener, ParseListe
 
 	@Override
 	public void objectParsed(ParseEvent<?> e) {
-		StreamThread.currentThread().getOut().println("Parsed object: " + e.getResult().get(0));
+		//StreamThread.currentThread().getOut().println("Parsed object: " + e.getResult().get(0));
 	}
 	
 	@SuppressWarnings("unchecked")

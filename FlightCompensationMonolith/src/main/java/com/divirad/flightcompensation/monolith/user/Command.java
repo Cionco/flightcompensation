@@ -52,10 +52,9 @@ public enum Command {
 
 	UPDATE {
 		public void execute(String...params) {
-			DownloadParseSaveController controller = new DownloadParseSaveController();
 			Constraint[] constraints;
 			Class<?> resource;
-			if(params.length != 2) {
+			if(params.length < 2) {
 				StreamThread.currentThread().getOut().println("Syntax Error");
 				help();
 				return;
@@ -63,7 +62,8 @@ public enum Command {
 			
 			if(params[1].equals("flights")) {
 				constraints = new Constraint[] {
-						new Constraint("flight_date", () -> LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+						new Constraint("flight_date", 
+								() -> params.length == 3 ? params[2] : LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
 					,	new Constraint("dep_iata", () -> "fra")
 				};
 				resource = Flight.class;
@@ -77,11 +77,11 @@ public enum Command {
 				help();
 				return;
 			}
-			
-			DataLoader fdl = DataLoader.getInstance(constraints);
-			fdl.addDownloadListener(controller);
-			Parser.getInstance().addParseListener(controller);
+			long time_before = System.currentTimeMillis();
+			DataLoader fdl = DataLoader.getInstance();
+			fdl.setConstraints(constraints);
 			fdl.getAllApiData(resource);
+			System.out.println("Operation took " + (System.currentTimeMillis() - time_before) + " milliseconds");
 		}
 		
 		public void help() {
@@ -109,11 +109,7 @@ public enum Command {
 			StreamThread.currentThread().getOut().println("Flight " + f.flight__iata + " on day " + f.flight_date);
 			StreamThread.currentThread().getOut().println("\t\t" + f.departure__iata + "\t->\t" + f.arrival__iata);
 			StreamThread.currentThread().getOut().println("Scheduled:\t" + format.format(f.departure__scheduled) + "\t->\t" + format.format(f.arrival__scheduled));
-			StreamThread.currentThread().getOut().print("Correct Flight? (y/n)");
-			Scanner input = new Scanner(App.userInput);
-			String choice = input.nextLine().toUpperCase();
-			input.close();
-			if(!choice.equals("Y")) return;
+
 			StreamThread.currentThread().getOut().println("Actual:\t\t" + format.format(f.departure__actual) + "\t->\t" + format.format(f.arrival__actual));
 			
 			StreamThread.currentThread().getOut().printf("Delay:\t\t\t\t\t%02d:%02d:00\n", f.arrival__delay / 60, f.arrival__delay % 60);
